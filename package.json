@@ -6,6 +6,7 @@
   "author": "Abhishek Tomar <6933841+ImAbhishekTomar@users.noreply.github.com>",
   "license": "MIT",
   "dependencies": {
+    "assert": "^2.1.0",
     "mocha": "^10.2.0"
   }
 }
