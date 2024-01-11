@@ -1,5 +1,5 @@
-const assert = require('assert');
-const { queryJsonWithXPath } = require('./your-library'); // Replace with the actual path to your library
+import { strictEqual } from 'assert';
+import { queryJsonWithXPath } from './your-library'; // Replace with the actual path to your library
 
 describe('JSON XPath Query Library', () => {
   const jsonData = {
@@ -17,19 +17,19 @@ describe('JSON XPath Query Library', () => {
   it('should query JSON data with XPath', () => {
     const xpathQuery = '/book/author/name';
     const result = queryJsonWithXPath(jsonData, xpathQuery);
-    assert.strictEqual(result, 'John Doe');
+    strictEqual(result, 'John Doe');
   });
 
   it('should handle basic XPath queries', () => {
     const xpathQuery = '/book/pages';
     const result = queryJsonWithXPath(jsonData, xpathQuery);
-    assert.strictEqual(result, 150);
+    strictEqual(result, 150);
   });
 
   it('should handle attribute queries', () => {
     const xpathQuery = '/book/author/@attributes/nationality';
     const result = queryJsonWithXPath(jsonData, xpathQuery);
-    assert.strictEqual(result, 'US');
+    strictEqual(result, 'US');
   });
 
   it('should handle array queries', () => {
@@ -41,6 +41,6 @@ describe('JSON XPath Query Library', () => {
     };
     const xpathQuery = '/books/book[2]/author';
     const result = queryJsonWithXPath(jsonDataWithArray, xpathQuery);
-    assert.strictEqual(result, 'Author 2');
+    strictEqual(result, 'Author 2');
   });
 });
