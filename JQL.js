@@ -1,3 +1,10 @@
+/**
+ * JsonQueryLibrary - A JavaScript library for querying and manipulating JSON data.
+ *
+ * @class
+ * @param {Array} data - Initial JSON data array to be queried.
+ */
+
 class JsonQueryLibrary {
   constructor(data) {
     this.data = data;
@@ -683,18 +690,213 @@ class JsonQueryLibrary {
     return this;
   }
 
+  cast(valueField, targetType, resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: this.castValue(item[valueField], targetType),
+    }));
+    return this;
+  }
+
+  coalesce(...fields) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      CoalesceResult: fields.reduce((acc, field) => (acc !== null ? acc : item[field]), null),
+    }));
+    return this;
+  }
+
+  convert(valueField, targetType, resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: this.castValue(item[valueField], targetType),
+    }));
+    return this;
+  }
+
+  current_user(resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: 'CurrentUserName',
+    }));
+    return this;
+  }
+
+  iif(conditionField, trueValueField, falseValueField, resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: item[conditionField] ? item[trueValueField] : item[falseValueField],
+    }));
+    return this;
+  }
+
+  isnull(valueField, replacementValue, resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: item[valueField] !== null ? item[valueField] : replacementValue,
+    }));
+    return this;
+  }
+
+  isnumeric(valueField, resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: this.isNumeric(item[valueField]),
+    }));
+    return this;
+  }
+
+  nullif(valueField, comparisonValue, resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: item[valueField] === comparisonValue ? null : item[valueField],
+    }));
+    return this;
+  }
+
+  session_user(resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: 'SessionUserName',
+    }));
+    return this;
+  }
+
+  sessionproperty(option, resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: 'SessionPropertyResult',
+    }));
+    return this;
+  }
+
+  system_user(resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: 'SystemUserName',
+    }));
+    return this;
+  }
+
+  user_name(userIdField, resultField) {
+    this.result = this.result.map((item) => ({
+      ...item,
+      [resultField]: 'DatabaseUserName',
+    }));
+    return this;
+  }
+
+  castValue(value, targetType) {
+    //working
+    return value;
+  }
+
+  isNumeric(value) {
+    //working
+    return !isNaN(parseFloat(value)) && isFinite(value);
+  }
+
+  addObject(newObject) {
+    this.result = [...this.result, newObject];
+    return this;
+  }
+
+  removeObject(conditionField, conditionValue) {
+    this.result = this.result.filter((item) => item[conditionField] !== conditionValue);
+    return this;
+  }
+
+  updateObject(conditionField, conditionValue, updateFields) {
+    this.result = this.result.map((item) => {
+      if (item[conditionField] === conditionValue) {
+        return { ...item, ...updateFields };
+      }
+      return item;
+    });
+    return this;
+  }
+
+  union(otherData) {
+    this.result = [...this.result, ...otherData];
+    return this;
+  }
+
+  queryJsonWithJsonPath(jsonData, jsonPath) {
+    const segments = jsonPath.split('.');
+    let result = [jsonData];
+
+    for (const segment of segments) {
+      if (Array.isArray(result)) {
+        const newResult = [];
+        for (const item of result) {
+          if (item && typeof item === 'object') {
+            if (Array.isArray(item[segment])) {
+              newResult.push(...item[segment]);
+            } else if (item[segment] !== undefined) {
+              newResult.push(item[segment]);
+            }
+          }
+        }
+        result = newResult;
+      } else {
+        result = result[segment];
+      }
+    }
+
+    return result;
+  }
+
+  having(data, condition) {
+    return data.filter(condition);
+  }
+
+  jsonToHtmlTable(jsonData) {
+    if (!jsonData || !Array.isArray(jsonData) || jsonData.length === 0) {
+      return '<p>No data available</p>';
+    }
+
+    const headers = Object.keys(jsonData[0]);
+
+    const tableHeader = `<thead><tr>${headers.map((header) => `<th>${header}</th>`).join('')}</tr></thead>`;
+
+    const tableBody = `<tbody>${jsonData.map((row) => `<tr>${headers.map((header) => `<td>${row[header]}</td>`).join('')}</tr>`).join('')}</tbody>`;
+
+    const htmlTable = `<table>${tableHeader}${tableBody}</table>`;
+
+    return htmlTable;
+  }
+
+  jsonToXml(jsonData) {
+    const convertToXml = (json, parentElement) => {
+      Object.keys(json).forEach((key) => {
+        if (typeof json[key] === 'object') {
+          const subElement = document.createElement(key);
+          convertToXml(json[key], subElement);
+          parentElement.appendChild(subElement);
+        } else {
+          const subElement = document.createElement(key);
+          subElement.textContent = json[key];
+          parentElement.appendChild(subElement);
+        }
+      });
+    };
+
+    const rootElement = document.createElement('root');
+    convertToXml(jsonData, rootElement);
+    const xmlString = new XMLSerializer().serializeToString(rootElement);
+    return xmlString;
+  }
+
+  jsonToAvro(jsonData, avroSchema) {
+    const type = avsc.parse(avroSchema);
+    const avroBuffer = type.toBuffer(jsonData);
+    return avroBuffer;
+  }
+
   getResult() {
     return this.result;
   }
 }
-
-//---------------------------------------------------------- TEST
-
-const jsonData = [
-  { id: 1, name: 'John', age: 25 },
-  { id: 2, name: 'Jane', age: 30 },
-  { id: 3, name: 'Bob', age: 22 },
-];
 
 const queryLibrary = new JsonQueryLibrary(jsonData);
 
@@ -742,7 +944,7 @@ queryResult = new JsonQueryLibrary(postsData)
 console.log(queryResult);
 
 jsonData = [
-  { ID: 1, Name: 'John Doe', Age: 30 },
+  { ID: 1, Name: 'Abhishek', Age: 30 },
   { ID: 2, Name: 'Jane Smith', Age: 25 },
 ];
 
@@ -818,7 +1020,6 @@ console.log(queryResult);
 jsonData = [
   { ID: 1, DateValue: '2023-01-15T12:30:00Z' },
   { ID: 2, DateValue: '2023-04-20T08:45:00Z' },
-  // ... more data
 ];
 
 queryResult = new JsonQueryLibrary(jsonData)
@@ -838,3 +1039,120 @@ queryResult = new JsonQueryLibrary(jsonData)
   .getResult();
 
 console.log(queryResult);
+
+jsonData = [
+  { ID: 1, Value: '123', IsNumericTest: '456' },
+  { ID: 2, Value: 'abc', IsNumericTest: '789' },
+  // ... more data
+];
+
+queryResult = new JsonQueryLibrary(jsonData)
+  .cast('Value', 'int', 'CastedValue')
+  .coalesce('NonExistentField', 'Value', 'CoalesceResult')
+  .convert('Value', 'date', 'ConvertedDate')
+  .current_user('CurrentUser')
+  .iif('CastedValue', 'IsNumericTest', 'Value', 'IIFResult')
+  .isnull('Value', 'DefaultValue', 'IsNullResult')
+  .isnumeric('IsNumericTest', 'IsNumericResult')
+  .nullif('Value', '123', 'NullIfResult')
+  .session_user('SessionUser')
+  .sessionproperty('TimeZone', 'SessionPropertyResult')
+  .system_user('SystemUser')
+  .user_name('ID', 'UserName')
+  .getResult();
+
+console.log(queryResult);
+
+jsonData = [
+  { ID: 1, Name: 'Abhishek', Age: 30 },
+  { ID: 2, Name: 'Jane Smith', Age: 25 },
+];
+
+queryResult = new JsonQueryLibrary(jsonData)
+  .addObject({ ID: 3, Name: 'Bob Johnson', Age: 35 })
+  .removeObject('ID', 2)
+  .updateObject('ID', 1, { Age: 31, City: 'Philippines' })
+  .getResult();
+
+console.log(queryResult);
+
+jsonData1 = [
+  { ID: 1, Name: 'Abhishek', Age: 30 },
+  { ID: 2, Name: 'Jane Smith', Age: 25 },
+];
+
+const jsonData2 = [
+  { ID: 3, Name: 'Bob Johnson', Age: 35 },
+  { ID: 4, Name: 'Alice Brown', Age: 28 },
+];
+
+queryResult = new JsonQueryLibrary(jsonData1).union(jsonData2).getResult();
+
+console.log(queryResult);
+
+jsonData = {
+  users: {
+    user: [
+      { id: 1, name: 'John' },
+      { id: 2, name: 'Jane' },
+      { id: 3, name: 'Bob' },
+    ],
+  },
+};
+
+const jsonPath = 'users.user[?(@.name=="Jane")]';
+const result = queryJsonWithJsonPath(jsonData, jsonPath);
+console.log(result);
+
+jsonData = [
+  { id: 1, name: 'John', age: 30 },
+  { id: 2, name: 'Jane', age: 25 },
+  { id: 3, name: 'Bob', age: 35 },
+];
+
+// Filter the data using the 'HAVING' function
+const filteredData = having(jsonData, (item) => item.age > 30);
+
+console.log(filteredData);
+
+const jsonData = [
+  { id: 1, name: 'John', age: 30 },
+  { id: 2, name: 'Jane', age: 25 },
+  { id: 3, name: 'Bob', age: 35 },
+];
+
+const htmlTable = jsonToHtmlTable(jsonData);
+console.log(htmlTable);
+
+const jsonDataForXml = {
+  person: {
+    name: 'Abhishek',
+    age: 30,
+    address: {
+      city: 'Philippines',
+      zip: '10001',
+    },
+  },
+};
+
+const xmlString = jsonToXml(jsonDataForXml);
+console.log(xmlString);
+
+const jsonDataForAvro = {
+  name: 'Abhishek',
+  age: 30,
+  city: 'Philippines',
+};
+
+const avroSchema = {
+  type: 'record',
+  name: 'Person',
+  fields: [
+    { name: 'name', type: 'string' },
+    { name: 'age', type: 'int' },
+    { name: 'city', type: 'string' },
+  ],
+};
+
+const avroBuffer = jsonToAvro(jsonDataForAvro, avroSchema);
+console.log(avroBuffer);
