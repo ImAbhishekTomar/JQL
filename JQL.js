@@ -893,12 +893,84 @@ class JsonQueryLibrary {
     return avroBuffer;
   }
 
+  queryJsonWithXPath(jsonData, xpathQuery) {
+    // Convert JSON to XML-like structure
+    const xmlData = jsonToXml(jsonData);
+
+    // Use DOMParser to parse the XML-like structure
+    const parser = new DOMParser();
+    const xmlDoc = parser.parseFromString(xmlData, 'application/xml');
+
+    // Use XPath to query the parsed XML
+    const result = xmlDoc.evaluate(xpathQuery, xmlDoc, null, XPathResult.ANY_TYPE, null);
+
+    // Return the result based on XPath type
+    switch (result.resultType) {
+      case XPathResult.NUMBER_TYPE:
+        return result.numberValue;
+      case XPathResult.STRING_TYPE:
+        return result.stringValue;
+      case XPathResult.BOOLEAN_TYPE:
+        return result.booleanValue;
+      case XPathResult.UNORDERED_NODE_ITERATOR_TYPE:
+        const nodes = [];
+        let node = result.iterateNext();
+        while (node) {
+          nodes.push(xmlToJson(node));
+          node = result.iterateNext();
+        }
+        return nodes;
+      default:
+        return null;
+    }
+  }
+
+  jsonToXml(json) {
+    let xml = '';
+    for (const key in json) {
+      if (json.hasOwnProperty(key)) {
+        xml += `<${key}>${typeof json[key] === 'object' ? jsonToXml(json[key]) : json[key]}</${key}>`;
+      }
+    }
+    return xml;
+  }
+
+  xmlToJson(xml) {
+    const obj = {};
+    if (xml.nodeType === 1) {
+      if (xml.attributes.length > 0) {
+        obj['@attributes'] = {};
+        for (let j = 0; j < xml.attributes.length; j++) {
+          const attribute = xml.attributes.item(j);
+          obj['@attributes'][attribute.nodeName] = attribute.nodeValue;
+        }
+      }
+    } else if (xml.nodeType === 3) {
+      obj = xml.nodeValue;
+    }
+    if (xml.hasChildNodes()) {
+      for (let i = 0; i < xml.childNodes.length; i++) {
+        const item = xml.childNodes.item(i);
+        const nodeName = item.nodeName;
+        if (typeof obj[nodeName] === 'undefined') {
+          obj[nodeName] = xmlToJson(item);
+        } else {
+          if (typeof obj[nodeName].push === 'undefined') {
+            const old = obj[nodeName];
+            obj[nodeName] = [];
+            obj[nodeName].push(old);
+          }
+          obj[nodeName].push(xmlToJson(item));
+        }
+      }
+    }
+    return obj;
+  }
+
   getResult() {
     return this.result;
   }
 }
-
-const queryLibrary = new JsonQueryLibrary(jsonData);
 
 const queryResult = queryLibrary
   .select(['id', 'name'])
@@ -1156,3 +1228,20 @@ const avroSchema = {
 
 const avroBuffer = jsonToAvro(jsonDataForAvro, avroSchema);
 console.log(avroBuffer);
+
+jsonData = {
+  book: {
+    title: 'Code with JavaScript',
+    author: {
+      name: 'Abhishek',
+      nationality: 'IN',
+    },
+    pages: 150,
+    genre: 'Fiction',
+  },
+};
+
+const xpathQuery = '/book/author/name';
+
+result = queryJsonWithXPath(jsonData, xpathQuery);
+console.log(result); // Output: Abhishek
