@@ -1,5 +1,5 @@
 import { strictEqual } from 'assert';
-import { queryJsonWithXPath } from './your-library'; // Replace with the actual path to your library
+import { queryJsonWithXPath } from './jsonQueryLibrary.js'; // Replace with the actual path to your library
 
 describe('JSON XPath Query Library', () => {
   const jsonData = {
