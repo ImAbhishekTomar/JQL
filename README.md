@@ -1,118 +1,54 @@
+# JsonQueryLibrary
 
-# JQL - JsonQueryLibrary
+**Note: This library is currently under development and is not yet ready for production use.**
 
-The `JsonQueryLibrary` is a JavaScript class that provides a set of methods for querying and manipulating JSON data. It offers functionality similar to SQL queries, allowing you to perform various operations such as selecting, filtering, ordering, and transforming JSON data.
+## Introduction
 
-## Table of Contents
+The `JsonQueryLibrary` is a JavaScript class designed to provide a wide range of methods for querying and manipulating JSON data. It aims to offer functionality similar to SQL queries, allowing users to perform various operations such as selecting, filtering, ordering, and transforming JSON data.
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Methods](#methods)
-  - [Select](#select)
-  - [Where](#where)
-  - [Order](#order)
-  - [Limit](#limit)
-  - [Skip](#skip)
-  - [Take](#take)
-  - [Count](#count)
-  - [Min](#min)
-  - [Max](#max)
-  - [Sum](#sum)
-  - [Round](#round)
-  - [Join](#join)
-  - [Ascii](#ascii)
-  - [Char](#char)
-  - [Charindex](#charindex)
-  - [Concat](#concat)
-  - [ConcatWithSeparator](#concatwithseparator)
-  - [DataLength](#datalength)
-  - [Difference](#difference)
-  - [Format](#format)
-  - [Left](#left)
-  - [Len](#len)
-  - [Lower](#lower)
-  - [Ltrim](#ltrim)
-  - [Nchar](#nchar)
-  - [Patindex](#patindex)
-  - [Quotename](#quotename)
-  - [Replace](#replace)
-  - [Replicate](#replicate)
-  - [Reverse](#reverse)
-  - [Right](#right)
-  - [Rtrim](#rtrim)
-  - [SoundsSimilar](#soundssimilar)
-  - [Space](#space)
-  - [Str](#str)
-  - [Stuff](#stuff)
-  - [Substring](#substring)
-  - [Translate](#translate)
-  - [Trim](#trim)
-  - [Unicode](#unicode)
-  - [Upper](#upper)
-  - [CreateTranslationMap](#createtranslationmap)
-  - [TranslateString](#translatestring)
-  - [Abs](#abs)
-  - [Acos](#acos)
-  - [Asin](#asin)
-  - [Atan](#atan)
-  - [Atan2](#atan2)
-  - [Avg](#avg)
-  - [Ceiling](#ceiling)
-  - [Count](#count-1)
-  - [Cos](#cos)
-  - [Cot](#cot)
-  - [Degrees](#degrees)
-  - [Exp](#exp)
-  - [Floor](#floor)
-  - [Log](#log)
-  - [Log10](#log10)
-  - [Max](#max-1)
-  - [Min](#min-1)
-  - [Pi](#pi)
-  - [Power](#power)
-  - [Radians](#radians)
-  - [Rand](#rand)
-  - [Round](#round-1)
-  - [Sign](#sign)
-  - [Sin](#sin)
-  - [Sqrt](#sqrt)
-  - [Square](#square)
-  - [Sum](#sum-1)
-  - [Tan](#tan)
-  - [CurrentTimestamp](#currenttimestamp)
-  - [DateAdd](#dateadd)
-  - [DateDiff](#datediff)
-  - [DateFromParts](#datefromparts)
-  - [DateName](#datename)
-  - [DatePart](#datepart)
-  - [Day](#day)
-  - [GetDate](#getdate)
-  - [GetUTCDate](#getutcdate)
-  - [IsDate](#isdate)
-  - [Month](#month)
-  - [SysDateTime](#sysdatetime)
-  - [Year](#year)
-  - [Cast](#cast)
-  - [Coalesce](#coalesce)
-  - [Convert](#convert)
-  - [CurrentUser](#currentuser)
-  - [Iif](#iif)
-  - [Isnull](#isnull)
-  - [Isnumeric](#isnumeric)
-  - [Nullif](#nullif)
-  - [SessionUser](#sessionuser)
-  - [SessionProperty](#sessionproperty)
-  - [SystemUser](#systemuser)
-  - [UserName](#username)
-  - [CastValue](#castvalue)
-  - [IsNumeric](#isnumeric-1)
-  - [AddObject](#addobject)
-  - [RemoveObject](#removeobject)
-  - [UpdateObject](#updateobject)
-  - [Union](#union)
-  - [GetResult](#getresult)
-- [Examples](#examples)
+## Status
+
+⚠️ **Development Status: Pre-Alpha**
+
+This library is in the early stages of development, and significant changes may occur in subsequent updates. It is not recommended for use in production environments at this time.
+
+## Features
+
+- [x] Basic querying capabilities
+- [ ] Advanced transformation functions (under development)
+- [ ] Performance optimizations (under development)
+- [ ] Comprehensive documentation (under development)
+
+## How to Contribute
+
+Your contributions and feedback are welcome! If you encounter issues, have suggestions, or want to contribute to the development of this library, please follow our [contribution guidelines](CONTRIBUTING.md).
+
+## Getting Started
+
+For those interested in trying out the library, please be aware of the following:
+
+- The API may undergo significant changes.
+- Documentation is a work in progress.
 
 ## Installation
 
-In Development not ready for production use.
+No specific installation is required at this time.
+
+## Usage
+
+Refer to the [examples](#examples) section for basic usage scenarios. Note that these examples may be subject to change as the library evolves.
+
+## Known Issues
+
+- [ ] Performance bottlenecks in large datasets
+- [ ] Limited error handling
+
+## Future Roadmap
+
+- [ ] Stable release for production use
+- [ ] Enhanced documentation with usage examples
+- [ ] Support for additional data formats
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).
